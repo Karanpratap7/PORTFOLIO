@@ -281,14 +281,25 @@
       sections.forEach((section, index) => {
         section.style.setProperty('--delay', `${index * 0.2}s`);
       });
-    });
 
-    const toggleCheckbox = document.getElementById('toggle');
-    const styleTag = document.getElementById('dark-mode-style');
+      const toggleCheckbox = document.getElementById('toggle');
+      const styleTag = document.getElementById('dark-mode-style');
 
-    toggleCheckbox.addEventListener('change', () => {
-      if (toggleCheckbox.checked) {
-        styleTag.innerHTML = `
+      // Load theme from localStorage
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark') {
+        toggleCheckbox.checked = true;
+        applyDarkMode(true);
+      }
+
+      toggleCheckbox.addEventListener('change', () => {
+        const isDark = toggleCheckbox.checked;
+        applyDarkMode(isDark);
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      });
+
+      function applyDarkMode(enable) {
+        styleTag.innerHTML = enable ? `
           body {
             background-color: #121212;
             color: #e0e0e0;
@@ -308,9 +319,7 @@
           a {
             color: #4dabf7;
           }
-        `;
-      } else {
-        styleTag.innerHTML = '';
+        ` : '';
       }
     });
   </script>
